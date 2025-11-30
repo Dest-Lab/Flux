@@ -1,13 +1,13 @@
 use iced::{
     //font::Family,
     Color, Padding, Theme, widget::{
-        Column, Rule, TextInput, column, container, rule::{FillMode, Style}, scrollable::{self, Rail}, text_input::{self}, Scrollable
-    },
+        Column, Rule, Scrollable, TextInput, column, container, rule::{FillMode, Style}, scrollable::{self, Rail}, text_input::{self}
+    }
 };
 
 use crate::ui::app::Message;
 
-pub fn input_box<'a>(
+pub fn input_with_list<'a>(
     list_column: Column<'a, Message>,
     text: &str,
     theme: &Theme
@@ -46,7 +46,7 @@ pub fn input_box<'a>(
                 }),
             // thin line under search
             Rule::horizontal(1).style(|_theme: &Theme| Style {
-                color: Color::from_rgb(35.0 / 255.0, 35.0 / 255.0, 39.0 / 255.0),
+                color: _theme.palette().success,
                 width: 1,
                 radius: iced::border::Radius::new(iced::Pixels(0.0)),
                 fill_mode: FillMode::Full,

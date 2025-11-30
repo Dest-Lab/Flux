@@ -1,2 +1,2 @@
-pub mod text_input;
+pub mod input_with_list;
 pub mod list_apps;

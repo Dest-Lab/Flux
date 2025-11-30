@@ -1,7 +1,7 @@
 use std::{fs, path::{Path, PathBuf}, time::UNIX_EPOCH};
 
 use freedesktop_icons::lookup;
-use iced::{Task, futures::future::ok, widget, window::{self}};
+use iced::{Task, widget, window::{self}};
 use image::ImageReader;
 
 use crate::{ui::app::{ Message}};

@@ -8,6 +8,7 @@ pub fn list_apps(
     name: String,
     _exec: String,
     icon: Option<PathBuf>,
+    theme: Theme
 ) -> iced::widget::Button<'static, Message> {
     let mut _content: Row<'_, Message> = Row::new();
 
@@ -56,7 +57,7 @@ pub fn list_apps(
             .style(
                 move |_theme: &Theme, _status: button::Status| button::Style {
                     // button bg is dark gray
-                    background: Some(Background::Color(Color::from_rgb(0.063, 0.063, 0.071))),
+                    background: Some(Background::Color(theme.palette().background)),
                     // text is white
                     text_color: Color::WHITE,
                     // border no color and small round

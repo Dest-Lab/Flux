@@ -1,6 +1,6 @@
 use iced::{Color, Element, Padding, Pixels, Settings, Size, Subscription, Task, Theme, event, keyboard::{self, Key, key::Named}, theme::Palette, widget::{Column, text_input}, window::{self, settings::PlatformSpecific}};
 
-use crate::{core::apps::{model::AppList, utils::{open_app}}, ui::widgets::{list_apps::list_apps, text_input::input_box}};
+use crate::{core::apps::{model::AppList, utils::open_app}, ui::widgets::{input_with_list::{input_with_list}, list_apps::list_apps}};
 
 pub fn run_ui(apps: Vec<AppList>) -> iced::Result{
     let window = window::Settings {
@@ -22,7 +22,6 @@ pub fn run_ui(apps: Vec<AppList>) -> iced::Result{
         },
         exit_on_close_request: true,
         transparent: true,
-        // close window = exit program
         ..Default::default()
     };
 
@@ -155,11 +154,12 @@ impl FluxUI {
                     list_apps(
                         entry.name.clone(),
                          entry.exec.clone(),
-                          Some(entry.icon_path.clone())
+                          Some(entry.icon_path.clone()),
+                          self.theme().clone()
                         ).on_press(Message::Open(entry.exec.clone()))))
         } // Make a list with all apps
         
-        input_box(list_column, &self.text, &self.theme())
+        input_with_list(list_column, &self.text, &self.theme())
         // Make a input_text
     }
 }
