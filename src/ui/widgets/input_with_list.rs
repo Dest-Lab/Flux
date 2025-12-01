@@ -1,7 +1,7 @@
 use iced::{
     //font::Family,
     Color, Padding, Theme, widget::{
-        Column, Rule, Scrollable, TextInput, column, container, rule::{FillMode, Style}, scrollable::{self, Rail}, text_input::{self}
+        Column, Rule, Scrollable, TextInput, column, container, rule::{FillMode, Style}, scrollable::{self, Id, Rail}, text_input::{self}
     }
 };
 
@@ -17,7 +17,7 @@ pub fn input_with_list<'a>(
 
     container(column![
             // input box on top
-            TextInput::new("Type a command or search...", text)
+            TextInput::new("Type commands, search...", text)
                 .on_input(Message::SearchChanged)
                 .on_submit(Message::Submit)
                 .size(18)
@@ -73,7 +73,7 @@ pub fn input_with_list<'a>(
                         },
                     },
                 }
-            })
+            }).id(Id::new("scrollable"))
         ])
         .style(move |_theme: &Theme| container::Style {
             // container background = full window bg

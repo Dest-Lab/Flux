@@ -1,4 +1,4 @@
-use iced::{Color, Element, Padding, Pixels, Settings, Size, Subscription, Task, Theme, event, keyboard::{self, Key, key::Named}, theme::Palette, widget::{Column, text_input}, window::{self, settings::PlatformSpecific}};
+use iced::{Color, Element, Padding, Pixels, Settings, Size, Subscription, Task, Theme, event, keyboard::{self, Key, key::Named}, theme::Palette, widget::{Column, scrollable::{self, AbsoluteOffset, Id}, text_input}, window::{self, settings::PlatformSpecific}};
 
 use crate::{core::apps::{model::AppList, utils::open_app}, ui::widgets::{input_with_list::{input_with_list}, list_apps::list_apps}};
 
@@ -64,7 +64,8 @@ pub enum Message {
 pub struct FluxUI {
     text: String,
     app_list: Vec<AppList>,
-    save_list: Vec<AppList>
+    save_list: Vec<AppList>,
+    selected: usize,
 }
 
 impl FluxUI {
@@ -74,6 +75,7 @@ impl FluxUI {
             text: "".into(),
             save_list: Vec::new(),
             app_list,
+            selected: 0,
         }
     }
 
@@ -95,8 +97,8 @@ impl FluxUI {
                 background: Color::from_rgb(0.063, 0.063, 0.071),
                 text: Color::WHITE,
                 primary: Color::from_rgb(0.055, 0.122, 0.165),
-                success: Color::from_rgb(0.306, 0.306, 0.318),
-                danger: Color::from_rgb(0.839, 0.141, 0.153),
+                success: Color::from_rgb(0.306, 0.306, 0.318), // Using that as secondary color like for divider or placeholder,
+                danger: Color::from_rgb(25.0/255.0, 25.0/255.0, 28.0/255.0), // Using that as selected,
             },
         )
     }
@@ -120,21 +122,60 @@ impl FluxUI {
                         new_list.push(entry.to_owned());
                     }
                 } // Push in list every app that contains input_text text
+
                 self.app_list = new_list;
-                Task::none()
+
+                if self.selected != 0 {
+                    self.selected = 0;
+                    return scrollable::scroll_to(Id::new("scrollable"), AbsoluteOffset { x: 0.0, y: 0.0 });
+                } 
+                    return Task::none();
+                
             }
             Message::Open(entry_exec) => {
-                open_app(entry_exec)
+                    open_app(entry_exec)
             }
             Message::Submit => {
-                open_app(self.app_list[0].exec.clone())
+                open_app(self.app_list[self.selected].exec.clone())
             }
             Message::KeyEvent(key) => {
-                // If user pressed Escape, close window
-                if key == keyboard::Key::Named(Named::Escape) {
-                    return window::get_latest().and_then(window::close)
+                match key {
+                    keyboard::Key::Named(Named::Escape) => return window::get_latest().and_then(window::close),
+                    // If user pressed Escape, close window
+                    keyboard::Key::Named(Named::ArrowDown) => {
+                        if self.selected+1 < self.app_list.len() {
+                            self.selected += 1;
+                            return scrollable::scroll_to(Id::new("scrollable"), AbsoluteOffset {
+                                x: 0.0,
+                                y: self.selected as f32 * 55.0
+                            });
+                        }else {
+                            self.selected = 0;
+                            return scrollable::scroll_to(Id::new("scrollable"), AbsoluteOffset {
+                                x: 0.0,
+                                y:  self.selected as f32 * 55.0,
+                            });
+                        }
+                    }
+                    // If user pressed Arrow Down, move to the next app
+                    keyboard::Key::Named(Named::ArrowUp) => {
+                        if self.selected > 0 {
+                            self.selected -= 1;
+                            return scrollable::scroll_to(Id::new("scrollable"), AbsoluteOffset {
+                                x: 0.0,
+                                y:  self.selected as f32 * 55.0
+                            });
+                        }else {
+                            self.selected = self.app_list.len() -1;
+                            return scrollable::scroll_to(Id::new("scrollable"), AbsoluteOffset {
+                                x: 0.0,
+                                y:  self.selected as f32 * 55.0,
+                            });
+                        }
+                    }
+                    // If user pressed Arrow Up, move to the previous app
+                    _ => Task::none()
                 }
-                Task::none()
             }
         }
     }
@@ -148,14 +189,15 @@ impl FluxUI {
             }
         );
 
-        for entry in &self.app_list {
+        for (index, entry) in self.app_list.iter().enumerate() {
             list_column = list_column.push(
                 Element::from(
                     list_apps(
                         entry.name.clone(),
                          entry.exec.clone(),
                           Some(entry.icon_path.clone()),
-                          self.theme().clone()
+                          self.theme().clone(),
+                          self.selected == index,
                         ).on_press(Message::Open(entry.exec.clone()))))
         } // Make a list with all apps
         

@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use iced::{Background, Border, Color, Length, Pixels, Shadow, Theme, widget::{Button, Row, button, image, row, svg, text}};
+use iced::{Alignment, Background, Border, Color, Length, Pixels, Shadow, Theme, widget::{Button, Row, button, image, row, svg, text}};
 
 use crate::{core::apps::utils::resize_icon, ui::app::Message};
 
@@ -8,7 +8,8 @@ pub fn list_apps(
     name: String,
     _exec: String,
     icon: Option<PathBuf>,
-    theme: Theme
+    theme: Theme,
+    selected: bool
 ) -> iced::widget::Button<'static, Message> {
     let mut _content: Row<'_, Message> = Row::new();
 
@@ -36,18 +37,23 @@ pub fn list_apps(
                     .width(40)
                     .height(40),
                 text(name)
-            ].spacing(10).align_y(iced::Alignment::Center);
+            ].spacing(10);
             }else {
-                _content = row![text(name)].align_y(iced::Alignment::Center);
+                _content = row![text(name)];
             }
         };
 
     } else {
-        _content = row![text(name)].align_y(iced::Alignment::Center);
+        _content = row![text(name)];
     }
-    Button::new(_content)
+    let bg_color = if selected == true {
+        theme.palette().danger
+    }else {
+        theme.palette().background
+    };
+    Button::new(_content.align_y(Alignment::Center))
             .padding(iced::Padding {
-                top: 15.0,
+                top: 5.0,
                 left: 25.0,
                 right: 0.0,
                 bottom: 0.0,
@@ -57,14 +63,14 @@ pub fn list_apps(
             .style(
                 move |_theme: &Theme, _status: button::Status| button::Style {
                     // button bg from theme
-                    background: Some(Background::Color(theme.palette().background)),
+                    background: Some(Background::Color(bg_color)),
                     // text from theme
                     text_color: theme.palette().text,
                     // border no color and small round
                     border: Border {
                         color: Color::TRANSPARENT,
                         width: 0.0,
-                        radius: iced::border::Radius::new(Pixels(5.0)),
+                        radius: iced::border::Radius::new(Pixels(0.0)),
                     },
                     // no shadow change
                     shadow: Shadow::default(),
