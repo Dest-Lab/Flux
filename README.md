@@ -11,14 +11,15 @@ A fast application launcher for Linux written in Rust
 <div align="left">
 
 
-https://github.com/user-attachments/assets/4d4e770a-166c-49e8-b915-9263ddbee499
+https://github.com/user-attachments/assets/0db05941-002d-46a8-a1d7-afc7e2911c96
+
 
 
 ## Screenshots
 
-<img width="1920" height="1080" alt="Stryde 1" src="https://github.com/user-attachments/assets/6db51e23-c93f-4291-bf4a-7aa6bc665ff9" />
+<img width="1920" height="1080" alt="Stryde 1" src="https://github.com/user-attachments/assets/179d74da-6835-4451-be10-60785ebcf910" />
 
-<img width="1920" height="1080" alt="Stryde 2" src="https://github.com/user-attachments/assets/693a831c-3fd1-4644-ba29-eaeaf90e4cef" />
+<img width="1920" height="1080" alt="Stryde 2" src="https://github.com/user-attachments/assets/27f7be87-1902-4e17-a430-0d21ef01e1de" />
 
 
 ## Proof
